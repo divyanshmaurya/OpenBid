@@ -2,35 +2,57 @@
 
 An online auction house in Java. Multiple clients connect to a central server, list items, and bid in real time while a countdown runs on each auction. Concurrent bids are serialized so two people cannot both win the same item; every state change is a JDBC transaction.
 
-CS-GY 6103 Introduction to Java — final project (dm6602). A full write-up is in [REPORT.md](REPORT.md).
+CS-GY 6103 Introduction to Java — final project (dm6602). The project report is [REPORT.pdf](REPORT.pdf).
+
+## Requirements
+
+- **Java 17+** (`java -version`)
+- The repo includes the Maven Wrapper (`./mvnw`); you do not need a separate Maven install
 
 ## Build
 
-Requires **Java 17+**. The repo includes the Maven Wrapper.
+From the project directory (the folder that contains `pom.xml`):
 
 ```bash
 ./mvnw package
 ```
 
-Writes `target/openbid-server.jar` and `target/openbid-client.jar`.
+Writes `target/openbid-server.jar` and `target/openbid-client.jar`. Also runs the JUnit suite.
+
+On Windows use `mvnw.cmd package`.
 
 ## Run the demo
 
-If you already ran an older demo, you can keep `openbid.db`: `--demo` refreshes unsold listing clocks so a few lots are live again (sold lots stay sold). Delete the file only if you want a full re-seed.
+**1. Start the server** (leave this terminal open)
 
 ```bash
 java -jar target/openbid-server.jar --demo
 ```
 
-Then, in other terminals:
+You should see something like:
+
+```
+Demo accounts: peter / harry / jane / mohan  (password000)
+OpenBid server listening on port 9000
+```
+
+`--demo` seeds those four accounts and sample lots. If `openbid.db` already exists, unsold listing clocks are refreshed so a few lots are live again (sold lots stay sold). Delete `openbid.db` (and `openbid.db-wal` / `openbid.db-shm` if present) only if you want a full re-seed.
+
+Optional flags: `--port 9000`, `--db openbid.db`. Pepper: set `OPENBID_PEPPER` in the environment for a non-default secret.
+
+**2. Start a client** (new terminal for each window)
 
 ```bash
 java -jar target/openbid-client.jar
 ```
 
-**Demo accounts** are printed in the server terminal when you start with `--demo` (password `password000`).
+Sign in with:
 
-The seed includes 10 lots: photos, categories, a reserve, Buy It Now, lots ending in under a minute, and a live proxy battle on the comic.
+- **Server:** `localhost`
+- **Port:** `9000`
+- **Username / password:** `peter`, `harry`, `jane`, or `mohan` / `password000`
+
+Or use **Create account** for a new user. Open several clients to bid against each other.
 
 ## What you can do in the client
 
@@ -40,7 +62,11 @@ The seed includes 10 lots: photos, categories, a reserve, Buy It Now, lots endin
 - Save a CSV receipt when you win (winner only)
 - Anti-snipe (+30s, shown as “Extended +30s”) and proxy bidding
 
+The seed includes 10 lots: photos, categories, a reserve, Buy It Now, lots ending in under a minute, and a live proxy battle on the comic.
+
 ## Concurrent-bid proof
+
+Server must already be running in the same working directory:
 
 ```bash
 java -cp target/openbid-server.jar com.openbid.tools.StressTestClient
@@ -48,4 +74,12 @@ java -cp target/openbid-server.jar com.openbid.tools.StressTestClient
 
 ## Tests
 
-`./mvnw test` runs the JUnit suite (concurrency, rollback, lifecycle, reserve, Buy It Now, relist, anti-snipe, proxy).
+```bash
+./mvnw test
+```
+
+Runs the JUnit suite (concurrency, rollback, lifecycle, reserve, Buy It Now, relist, anti-snipe, proxy).
+
+## Eclipse
+
+**File → Import → Existing Maven Projects**, run `ServerMain` with program argument `--demo`, then run `ClientMain` several times.
