@@ -2,7 +2,7 @@
 
 An online auction house in Java. Multiple clients connect to a central server, list items, and bid in real time while a countdown runs on each auction. Concurrent bids are serialized so two people cannot both win the same item; every state change is a JDBC transaction.
 
-CS-GY 6103 Introduction to Java — final project (dm6602). The project report is [REPORT.pdf](REPORT.pdf).
+CS-GY 6103 Introduction to Java — final project by Divyansh Maurya (Net ID: dm6602). The project report is [REPORT.pdf](REPORT.pdf).
 
 ## Requirements
 
