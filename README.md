@@ -7,7 +7,21 @@ CS-GY 6103 Introduction to Java — final project (dm6602). The project report i
 ## Requirements
 
 - **Java 17+** (`java -version`)
-- The repo includes the Maven Wrapper (`./mvnw`); you do not need a separate Maven install
+- The repo includes the Maven Wrapper (`./mvnw`); you do not need a separate Maven install, SQLite server, or other tools
+
+## Dependencies
+
+`./mvnw package` downloads these from Maven Central and **shades them into the jars**, so `java -jar` needs only Java 17+.
+
+| Dependency | Version | Role |
+| --- | --- | --- |
+| [SQLite JDBC](https://github.com/xerial/sqlite-jdbc) (`org.xerial:sqlite-jdbc`) | 3.47.2.0 | JDBC driver; the database is the local file `openbid.db` |
+| [FlatLaf](https://www.formdev.com/flatlaf/) (`com.formdev:flatlaf`) | 3.5.4 | Look and feel (dark/light). The UI is still Java Swing |
+| [JUnit Jupiter](https://junit.org/junit5/) (`org.junit.jupiter:junit-jupiter`) | 5.11.4 | Tests only (`./mvnw test`); not required to run the app |
+
+Everything else is **JDK 17**: Swing, TCP sockets (`java.net`), concurrency (`ExecutorService`, `synchronized`, `ScheduledExecutorService`), JDBC (`java.sql`), and `javax.crypto` (PBKDF2 password hashing).
+
+Optional: set `OPENBID_PEPPER` in the environment for a non-default password pepper.
 
 ## Build
 
